@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎉 Asistente de Fiestas Neon</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Fuente Neon -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==================== ESTILOS GENERALES ==================== */
+     body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'Muli', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      color: #ff00cc;
+      text-shadow: 0 0 10px #ff00cc, 0 0 20px #ff33ff, 0 0 30px #cc00ff;
+    }
+
+    p {
+      color: #e0e0e0;
+      text-shadow: 0 0 5px #b300ff;
+    }
+
+    /* ==================== NAVBAR ==================== */
+    .navbar {
+      background: rgba(18, 18, 18, 0.85);
+      box-shadow: 0 0 25px #cc079a;
+      z-index: 10;
+    }
+
+    .navbar .nav-link, 
+    .navbar .navbar-brand {
+      color: #fff !important;
+      font-weight: 500;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    .navbar .nav-link:hover {
+      color: #ff00cc !important;
+      text-shadow: 0 0 15px #ff00cc;
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+      padding: 120px 20px 80px;
+      text-align: center;
+      background: rgba(18, 18, 18, 0.9);
+      box-shadow: 0 0 25px #ff00cc;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #ff33ff;
+      text-shadow: 0 0 20px #ff33ff, 0 0 40px #ff00ff;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #ccc;
+      text-shadow: 0 0 10px #cc00ff;
+    }
+
+    /* ==================== TARJETAS DE SERVICIOS ==================== */
+    .card {
+      background-color: #1c1c1c;
+      border: 2px solid transparent;
+      color: #fff;
+      transition: all 0.3s ease-in-out;
+      text-shadow: 0 0 5px #ff00cc;
+    }
+
+    .card:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 25px #ff00cc;
+      border-color: #ff00cc;
+    }
+
+    .card h5 {
+      color: #ff33ff;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+
+    /* ==================== TARJETAS DE FIESTAS ==================== */
+    .fiesta-card {
+      background-color: #1c1c1c;
+      border-left: 5px solid #ff00cc;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px #ff00cc;
+      transition: transform 0.3s;
+    }
+
+    .fiesta-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #ff33ff;
+    }
+
+    .fiesta-card h4 {
+      color: #ff33ff;
+      text-shadow: 0 0 15px #ff33ff;
+    }
+
+    /* ==================== SECCIONES ==================== */
+    section h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2.5rem;
+      color: #ff33ff;
+      text-shadow: 0 0 20px #ff00cc;
+    }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      color: #aaa;
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 0 10px #ff00cc;
+    }
+
+    /* ==================== CANVAS ==================== */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fondo animado -->
+  <canvas id="fondoNeon"></canvas>
+  <canvas id="globos3D"></canvas>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark py-3">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">🎉 Asistente de Fiestas</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{url_for('inicio')}}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('servicios')}}">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('perfil') }}">Perfil</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('chat') }}">Muro de fiestas</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Cerrar Sesión</a></li>
+           
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <h1>✨ Organiza tu fiesta soñada ✨</h1>
+    <p>Encuentra salones, comida, DJs y más con un toque de magia neón</p>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="container my-5" id="servicios">
+    <h2>💫 Servicios</h2>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <a href="{{ url_for('servicios') }}" class="text-decoration-none text-white">
+          <div class="card text-center p-3">
+            <h5>🏛️ Salones</h5>
+            <p>Espacios elegantes y modernos para tu evento</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-3">
+        <a href="{{ url_for('servicios') }}" class="text-decoration-none text-white">
+          <div class="card text-center p-3">
+            <h5>🍽️ Comida</h5>
+            <p>Catering gourmet, mesas temáticas y postres increíbles</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-3">
+        <a href="{{ url_for('servicios') }}" class="text-decoration-none text-white">
+          <div class="card text-center p-3">
+            <h5>🎧 DJs</h5>
+            <p>Música para todos los estilos, desde house hasta pop</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-3">
+        <a href="{{ url_for('servicios') }}" class="text-decoration-none text-white">
+          <div class="card text-center p-3">
+            <h5>🎭 Entretenimiento</h5>
+            <p>Shows, luces LED, animadores y más diversión</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIESTAS REALIZADAS -->
+  <section class="container my-5">
+    <h2>🎊 Ejemplos de Fiestas Realizadas</h2>
+    <div class="fiesta-card">
+      <h4>💜 Fiesta Techno Neon</h4>
+      <p>Una noche vibrante con luces LED, DJ en vivo y decoración futurista. Ideal para jóvenes amantes de la electrónica.</p>
+    </div>
+    <div class="fiesta-card">
+      <h4>💙 Cumpleaños Infantil Temático</h4>
+      <p>Decoración de superhéroes, animadores disfrazados, pastel personalizado y juegos interactivos para niños.</p>
+    </div>
+    <div class="fiesta-card">
+      <h4>💖 Boda en Jardín Nocturno</h4>
+      <p>Ambiente romántico con luces cálidas, música instrumental, catering gourmet y pista de baile bajo las estrellas.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2025 Asistente de Fiestas Neon | Creado con 💜 por Milton</p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Fondo de luces neón animadas
+    const canvas = document.getElementById('fondoNeon');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let luces = [];
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Luz {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = 1 + Math.random() * 2.5;
+        this.velX = (Math.random() - 0.5) * 0.3;
+        this.velY = (Math.random() - 0.5) * 0.3;
+        this.alpha = 0;
+        this.alphaDir = 0.02 + Math.random() * 0.02;
+      }
+      update() {
+        this.x += this.velX;
+        this.y += this.velY;
+        if (this.x < 0) this.x = width;
+        if (this.x > width) this.x = 0;
+        if (this.y < 0) this.y = height;
+        if (this.y > height) this.y = 0;
+        this.alpha += this.alphaDir;
+        if (this.alpha >= 1 || this.alpha <= 0) this.alphaDir *= -1;
+      }
+      draw(ctx) {
+        ctx.beginPath();
+        let gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 15);
+        gradient.addColorStop(0, `rgba(255, 0, 204, ${this.alpha})`);
+        gradient.addColorStop(0.7, `rgba(0, 255, 255, 0)`);
+        ctx.fillStyle = gradient;
+        ctx.shadowColor = 'rgba(255, 0, 204, 0.7)';
+        ctx.shadowBlur = this.size * 20;
+        ctx.arc(this.x, this.y, this.size * 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initLuces(count = 60) {
+      luces = [];
+      for (let i = 0; i < count; i++) luces.push(new Luz());
+    }
+
+    function animateLuces() {
+      ctx.clearRect(0, 0, width, height);
+      luces.forEach(luz => { luz.update(); luz.draw(ctx); });
+      requestAnimationFrame(animateLuces);
+    }
+
+    initLuces();
+    animateLuces();
+  </script>
+</body>
+</html>

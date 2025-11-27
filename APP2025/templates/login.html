@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Registro</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+
+  <div class="container">
+    <div class="side-line left"></div>
+    <div class="side-line right"></div>
+
+    <div class="form-box" id="formBox">
+        
+     
+      <!-- Login Form -->
+      <form id="loginForm" class="form active" method="POST" action="/">
+        <h2>Iniciar Sesión</h2>
+        <input type="text" name="usuario" placeholder="Usuario" required>
+        <input type="password" name="contraseña" placeholder="Contraseña" required>
+        <button type="submit">Entrar</button>
+        <p>¿No tienes cuenta? <a href="#" id="toRegister">Regístrate</a></p>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="form" method="POST" action="/registro">
+        <h2>Registro</h2>
+        <input type="text" name="usuario" placeholder="Usuario" required>
+        <input type="email" name="correo" placeholder="Correo" required>
+        <input type="password" name="contraseña" placeholder="Contraseña" required>
+        <button type="submit">Registrar</button>
+        <p>¿Ya tienes cuenta? <a href="#" id="toLogin">Iniciar sesión</a></p>
+      </form>
+
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='login.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+  // tsParticles fondo animado
+  tsParticles.load("tsparticles", {
+    fpsLimit: 60,
+    background: { color: { value: "#121212" }},
+    particles: {
+      number: { value: 50 },
+      color: { value: ["#00bcd4", "#ff4081", "#8e24aa", "#00e676", "#ffc107"] },
+      shape: { type: ["circle", "triangle", "star"] },
+      opacity: { value: 0.9, random: true },
+      size: { value: 6, random: { enable: true, minimumValue: 3 } },
+      move: {
+        enable: true, speed: 2, direction: "bottom",
+        outModes: { default: "out" }, straight: false
+      },
+      rotate: {
+        value: 0, random: true, direction: "random",
+        animation: { enable: true, speed: 10, sync: false }
+      }
+    },
+    interactivity: {
+      events: { onhover: { enable: false }, onclick: { enable: false } }
+    },
+    detectRetina: true
+  });
+
+  // Lógica para alternar entre formularios
+  const toRegister = document.getElementById('toRegister');
+  const toLogin = document.getElementById('toLogin');
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+
+  if (toRegister && toLogin && loginForm && registerForm) {
+    toRegister.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginForm.classList.remove('active');
+      registerForm.classList.add('active');
+    });
+
+    toLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      registerForm.classList.remove('active');
+      loginForm.classList.add('active');
+    });
+  }
+});
+
+  </script>
+</body>
+</html>

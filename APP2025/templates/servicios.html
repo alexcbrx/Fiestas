@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎉 Fiesta Soñada</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+  <style>
+    /* ---- TU CSS EXACTO (no modificado) ---- */
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'Muli', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: rgba(18, 18, 18, 0.9);
+      box-shadow: 0 0 25px #ff00cc;
+      backdrop-filter: blur(6px);
+    }
+
+    .navbar .navbar-brand,
+    .navbar .nav-link {
+      color: #fff !important;
+      font-weight: 500;
+      text-shadow: 0 0 10px #ff00cc;
+      transition: 0.3s;
+    }
+
+    .navbar .nav-link:hover {
+      color: #ff00cc !important;
+      text-shadow: 0 0 20px #ff00cc, 0 0 40px #cc00ff;
+    }
+
+    header {
+      text-align: center;
+      padding: 100px 20px 60px;
+      background: rgba(18, 18, 18, 0.85);
+      box-shadow: 0 0 20px rgba(255, 0, 204, 0.4);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #ff00cc;
+      text-shadow: 0 0 15px #ff00cc, 0 0 30px #cc00ff;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: #ccc;
+      text-shadow: 0 0 10px #ff00cc44;
+    }
+
+    h2 {
+      color: #ff00cc;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px #ff00cc, 0 0 20px #cc00ff;
+    }
+
+    .slider-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .slides {
+      width: 100%;
+      display: flex;
+    }
+
+    .slide {
+      position: relative;
+      height: 70vh;
+      flex: 1;
+      margin: 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: flex 0.5s ease-in-out, box-shadow 0.3s;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(255, 0, 204, 0.2);
+    }
+
+    .slide.active {
+      flex: 10;
+      box-shadow: 0 0 30px #ff00cc, 0 0 60px #cc00ff;
+    }
+
+    .info-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      transition: opacity 0.4s ease;
+    }
+
+    .slide:hover .info-overlay {
+      opacity: 1;
+    }
+
+    .info-overlay h3 {
+      margin-bottom: 10px;
+      font-size: 26px;
+      color: #ff00cc;
+      text-shadow: 0 0 10px #ff00cc, 0 0 20px #cc00ff;
+    }
+
+    .info-overlay p {
+      font-size: 16px;
+      color: #ddd;
+      margin-bottom: 20px;
+      max-width: 80%;
+    }
+
+    .agregar,
+    .editar,
+    .eliminar {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 2px;
+    }
+
+    .agregar {
+      background: #ff00cc;
+      color: #fff;
+      box-shadow: 0 0 15px #ff00cc;
+    }
+
+    .agregar:hover {
+      background: #cc00ff;
+      box-shadow: 0 0 25px #ff00cc, 0 0 50px #cc00ff;
+      color: #fff;
+    }
+
+    .editar {
+      background: #00ccff;
+      color: #000;
+    }
+
+    .editar:hover {
+      background: #0099cc;
+      color: #fff;
+    }
+
+    .eliminar {
+      background: #ff4444;
+      color: #fff;
+    }
+
+    .eliminar:hover {
+      background: #cc0000;
+      color: #fff;
+    }
+
+    footer {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      color: #aaa;
+      margin-top: 60px;
+      box-shadow: 0 0 20px #ff00cc55;
+    }
+
+    footer p {
+      text-shadow: 0 0 10px #ff00cc22;
+    }
+
+    .modal-content {
+      background: #141414;
+      border: 2px solid #ff00cc;
+      box-shadow: 0 0 25px #ff00cc;
+    }
+
+    .modal-title {
+      color: #ff00cc;
+      text-shadow: 0 0 15px #ff00cc, 0 0 30px #cc00ff;
+    }
+
+    .form-select {
+      background: #1f1f1f;
+      color: #fff;
+      border: 1px solid #ff00cc;
+    }
+
+    .form-select:focus {
+      box-shadow: 0 0 10px #ff00cc;
+    }
+
+    /* estilos para inputs dentro de los modales */
+    .modal .form-control {
+      background: #1b1b1b;
+      color: #fff;
+      border: 1px solid #ff00cc;
+    }
+
+    .modal .form-label {
+      color: #ffb6e6;
+    }
+
+    .modal .modal-footer .btn {
+      border-radius: 8px;
+      padding: 8px 18px;
+    }
+    /* ---- FIN CSS ---- */
+  </style>
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark py-3">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">🎊 Fiesta Soñada</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('inicio') }}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('servicios') }}">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('perfil') }}">Perfil</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('chat') }}">Muro de fiestas</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Cerrar Sesión</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header>
+    <h1>Organiza tu Fiesta Soñada</h1>
+    <p>Selecciona tus favoritos para armar tu evento perfecto</p>
+  </header>
+
+  <!-- FORMULARIO PARA NUEVOS SERVICIOS (ahora abre modal visual mejorado) -->
+  <section class="container my-5">
+    <h2>➕ Agregar Nuevo Servicio</h2>
+    <div class="d-flex justify-content-center">
+      <button id="btnAbrirAgregar" class="btn agregar">Abrir formulario para nuevo servicio</button>
+    </div>
+  </section>
+
+  <!-- SECCIONES DE SERVICIOS -->
+  <main class="container-fluid">
+    {% for tipo, lista in [('comida', comidas), ('salones', salones), ('djs', djs), ('entretenimiento', entretenimientos)] %}
+    <section class="bloque {{ tipo }}">
+      <h2>
+        {% if tipo=='comida' %}🍽️ Comida{% elif tipo=='salones' %}🏛️ Salones{% elif tipo=='djs' %}🎧 DJs{% else %}🎭
+        Entretenimiento{% endif %}
+      </h2>
+      <div class="slider-container">
+        <div class="slides">
+          {% for item in lista %}
+          <div class="slide{% if loop.index0 == 0 %} active{% endif %}"
+            style="background-image:url('{{ item.imagen_url }}')" data-id="{{ item.id }}" data-tipo="{{ tipo }}"
+            data-nombre="{{ item.nombre }}">
+
+            <div class="info-overlay">
+              <h3>{{ item.nombre }}</h3>
+              <p>{{ item.descripcion }}</p>
+
+              <button class="agregar" data-action="agregar">Agregar a mi fiesta</button>
+              <button class="editar" data-action="editar">Editar</button>
+              <button class="eliminar" data-action="eliminar">Eliminar</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endfor %}
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Fiesta Soñada | Creado con 💜 por Milton</p>
+  </footer>
+
+  <!-- MODAL PARA SELECCIONAR FIESTA (sin cambios funcionales) -->
+  <div class="modal fade" id="modalFiestas" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">🎊 Selecciona tu fiesta</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p>Elige a qué fiesta deseas agregar este elemento:</p>
+          <select id="selectFiesta" class="form-select mb-3">
+            <option value="">Cargando...</option>
+          </select>
+          <button id="confirmarAgregar" class="btn agregar">Agregar a mi fiesta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL MEJORADO: AGREGAR SERVICIO -->
+  <div class="modal fade" id="modalAgregarServicio" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title modal-title">➕ Agregar Servicio</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="formAgregarModal">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Tipo de servicio</label>
+              <select id="modal_tipo" class="form-select" required>
+                <option value="">Selecciona...</option>
+                <option value="comida">Comida</option>
+                <option value="salones">Salones</option>
+                <option value="djs">DJs</option>
+                <option value="entretenimiento">Entretenimiento</option>
+                <option value="decoracion">Decoración</option>
+                <option value="bebidas">Bebidas</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Nombre</label>
+              <input id="modal_nombre" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Descripción</label>
+              <textarea id="modal_descripcion" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">URL de imagen</label>
+              <input id="modal_imagen" type="url" class="form-control" />
+              <small class="text-muted">Puedes pegar una URL o dejarla vacía.</small>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn eliminar" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn agregar">Guardar servicio</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL MEJORADO: EDITAR SERVICIO (mismos campos) -->
+  <div class="modal fade" id="modalEditarServicio" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">✏️ Editar Servicio</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="formEditarModal">
+          <input type="hidden" id="edit_id" />
+          <input type="hidden" id="edit_tipo" />
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Tipo</label>
+              <select id="edit_tipo_visible" class="form-select" required>
+                <option value="comida">Comida</option>
+                <option value="salones">Salones</option>
+                <option value="djs">DJs</option>
+                <option value="entretenimiento">Entretenimiento</option>
+                <option value="decoracion">Decoración</option>
+                <option value="bebidas">Bebidas</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Nombre</label>
+              <input id="edit_nombre" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Descripción</label>
+              <textarea id="edit_descripcion" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">URL de imagen</label>
+              <input id="edit_imagen" type="url" class="form-control" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn eliminar" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn editar">Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <script>
+    // -------------------- SLIDER --------------------
+    function sliderPlugin(selector) {
+      const slides = document.querySelectorAll(`${selector} .slide`);
+      slides.forEach(slide => slide.addEventListener('click', () => {
+        slides.forEach(s => s.classList.remove('active'));
+        slide.classList.add('active');
+      }));
+    }
+    sliderPlugin('.comida');
+    sliderPlugin('.salones');
+    sliderPlugin('.djs');
+    sliderPlugin('.entretenimiento');
+
+    // -------------------- VARIABLES --------------------
+    let itemSeleccionado = null;
+    const modalFiestas = new bootstrap.Modal(document.getElementById('modalFiestas'));
+    const modalAgregar = new bootstrap.Modal(document.getElementById('modalAgregarServicio'));
+    const modalEditar = new bootstrap.Modal(document.getElementById('modalEditarServicio'));
+
+    // Abrir modal agregar desde botón
+    document.getElementById('btnAbrirAgregar').addEventListener('click', () => {
+      // limpiar campos
+      document.getElementById('modal_tipo').value = '';
+      document.getElementById('modal_nombre').value = '';
+      document.getElementById('modal_descripcion').value = '';
+      document.getElementById('modal_imagen').value = '';
+      modalAgregar.show();
+    });
+
+    // -------------------- EVENTS on slides (delegation) --------------------
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.slide button').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const slide = e.target.closest('.slide');
+          if (!slide) return;
+          const tipo = slide.dataset.tipo;
+          const id = slide.dataset.id;
+          const nombre = slide.dataset.nombre;
+          const action = e.target.dataset.action;
+
+          if (action === 'agregar') {
+            itemSeleccionado = { tipo, item_id: id, nombre };
+            const select = document.getElementById('selectFiesta');
+            select.innerHTML = '<option>Cargando...</option>';
+            try {
+              const res = await fetch('/mis_fiestas');
+              const fiestas = await res.json();
+              select.innerHTML = fiestas.length === 0 ? '<option>No tienes fiestas aún</option>' :
+                fiestas.map(f => `<option value="${f}">${f}</option>`).join('');
+              modalFiestas.show();
+            } catch {
+              Toastify({ text: "❌ Error cargando tus fiestas", duration: 3000, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#ff4444,#cc0000)", color: "#fff" } }).showToast();
+            }
+          } else if (action === 'editar') {
+            // abrir modal editar con datos actuales (vamos a pedir al servidor la info por si falta)
+            openEditarModal(tipo, id);
+          } else if (action === 'eliminar') {
+            eliminarServicio(tipo, id, nombre);
+          }
+        });
+      });
+    });
+
+    // -------------------- AGREGAR A FIESTA (sin cambios) --------------------
+    document.getElementById('confirmarAgregar').addEventListener('click', async () => {
+      const fiesta_nombre = document.getElementById('selectFiesta').value;
+      if (!fiesta_nombre || fiesta_nombre === 'Cargando...') return;
+      const { tipo, item_id, nombre } = itemSeleccionado || {};
+      if (!tipo || !item_id) return;
+      try {
+        const res = await fetch('/agregar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tipo, id: item_id, fiesta_nombre })
+        });
+        const result = await res.json();
+        modalFiestas.hide();
+        Toastify({
+          text: result.status === 'ok' ? `🎉 ${nombre} agregado a "${fiesta_nombre}"` : `⚠️ ${result.message}`,
+          duration: 3500,
+          gravity: "bottom",
+          position: "right",
+          style: {
+            background: result.status === 'ok' ? "linear-gradient(135deg, #ff00cc, #cc00ff)" : "linear-gradient(135deg, #ff5f6d, #ffc371)",
+            color: result.status === 'ok' ? "#fff" : "#000",
+            fontWeight: "600"
+          }
+        }).showToast();
+      } catch {
+        Toastify({ text: "❌ Error al agregar a la fiesta", duration: 3000, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#ff4444,#cc0000)", color: "#fff" } }).showToast();
+      }
+    });
+
+    // -------------------- AGREGAR SERVICIO (modal) --------------------
+    document.getElementById('formAgregarModal').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const tipo = document.getElementById('modal_tipo').value;
+      const nombre = document.getElementById('modal_nombre').value.trim();
+      const descripcion = document.getElementById('modal_descripcion').value.trim();
+      const imagen_url = document.getElementById('modal_imagen').value.trim();
+
+      if (!tipo || !nombre) {
+        Toastify({ text: "⚠️ Completa los campos requeridos", duration: 2500, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#ff5f6d,#ffc371)", color: "#000" } }).showToast();
+        return;
+      }
+
+      try {
+        const resp = await fetch('/api/servicios/nuevo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tipo, nombre, descripcion, imagen_url })
+        });
+        const data = await resp.json();
+        Toastify({ text: data.message || "✅ Servicio agregado", duration: 2800, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#00cc66,#00ff99)", color: "#fff" } }).showToast();
+        modalAgregar.hide();
+        setTimeout(() => location.reload(), 700);
+      } catch (err) {
+        console.error(err);
+        Toastify({ text: "❌ Error al guardar servicio", duration: 3000, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#ff4444,#cc0000)", color: "#fff" } }).showToast();
+      }
+    });
+
+    // -------------------- ABRIR EDITAR MODAL (carga datos si es necesario) --------------------
+    async function openEditarModal(tipo, id) {
+      try {
+        // Intentamos obtener datos desde la API general si existe (/api/servicios) para precargar campos
+        let nombre = '';
+        let descripcion = '';
+        let imagen_url = '';
+
+        try {
+          const res = await fetch('/api/servicios');
+          if (res.ok) {
+            const lista = await res.json();
+            const item = lista.find(x => String(x.id) === String(id) && (x.tipo === tipo || x.tipo === tipo.replace(/s$/, '')));
+            if (item) {
+              nombre = item.nombre || '';
+              descripcion = item.descripcion || '';
+              imagen_url = item.imagen || item.imagen_url || '';
+            }
+          }
+        } catch (e) {
+          // si falla, seguimos (no es crítico)
+          console.warn('No se pudo precargar desde /api/servicios:', e);
+        }
+
+        // Rellenar modal editar
+        document.getElementById('edit_id').value = id;
+        document.getElementById('edit_tipo').value = tipo;
+        document.getElementById('edit_tipo_visible').value = tipo;
+        document.getElementById('edit_nombre').value = nombre;
+        document.getElementById('edit_descripcion').value = descripcion;
+        document.getElementById('edit_imagen').value = imagen_url;
+
+        modalEditar.show();
+      } catch (err) {
+        console.error(err);
+        Toastify({ text: "❌ Error abriendo modal editar", duration: 2500, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#ff4444,#cc0000)", color: "#fff" } }).showToast();
+      }
+    }
+
+    // -------------------- GUARDAR CAMBIOS (editar) --------------------
+    document.getElementById('formEditarModal').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('edit_id').value;
+      // tipo editable visible
+      let tipo = document.getElementById('edit_tipo_visible').value || document.getElementById('edit_tipo').value;
+      const nombre = document.getElementById('edit_nombre').value.trim();
+      const descripcion = document.getElementById('edit_descripcion').value.trim();
+      const imagen_url = document.getElementById('edit_imagen').value.trim();
+
+      if (!id || !tipo || !nombre) {
+        Toastify({ text: "⚠️ Completa los campos requeridos", duration: 2200, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#ff5f6d,#ffc371)", color: "#000" } }).showToast();
+        return;
+      }
+
+      // Primero intentamos PUT al endpoint RESTful (tu implementación original)
+      try {
+        let triedPut = false;
+        try {
+          const resp = await fetch(`/api/servicios/${tipo}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre, descripcion, imagen: imagen_url })
+          });
+          triedPut = true;
+          if (resp.ok) {
+            const d = await resp.json();
+            Toastify({ text: d.message || '✅ Servicio actualizado', duration: 2200, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#00cc66,#00ff99)", color: "#fff" } }).showToast();
+            modalEditar.hide();
+            setTimeout(() => location.reload(), 700);
+            return;
+          }
+        } catch (e) {
+          console.warn('PUT falló, haremos fallback a POST editar:', e);
+        }
+
+        // Fallback: endpoint POST /api/servicios/editar (por compatibilidad)
+        const resp2 = await fetch('/api/servicios/editar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tipo, id, nombre, descripcion, imagen_url })
+        });
+        const data2 = await resp2.json();
+        Toastify({ text: data2.message || '✅ Servicio actualizado', duration: 2200, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#00cc66,#00ff99)", color: "#fff" } }).showToast();
+        modalEditar.hide();
+        setTimeout(() => location.reload(), 700);
+      } catch (err) {
+        console.error(err);
+        Toastify({ text: "❌ Error actualizando servicio", duration: 3000, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#ff4444,#cc0000)", color: "#fff" } }).showToast();
+      }
+    });
+
+    // -------------------- ELIMINAR (con fallback) --------------------
+    async function eliminarServicio(tipo, id, nombre) {
+      if (!confirm(`¿Deseas eliminar "${nombre}"?`)) return;
+
+      try {
+        // Intento 1: DELETE RESTful (tu ruta original)
+        try {
+          const res = await fetch(`/api/servicios/${tipo}/${id}`, { method: 'DELETE' });
+          if (res.ok) {
+            const data = await res.json();
+            Toastify({ text: data.message || '✅ Servicio eliminado', duration: 2200, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#ff4444,#cc0000)", color: "#fff" } }).showToast();
+            setTimeout(() => location.reload(), 700);
+            return;
+          }
+        } catch (e) {
+          console.warn('DELETE falló, probando POST /api/servicios/eliminar', e);
+        }
+
+        // Fallback: POST /api/servicios/eliminar (por compatibilidad)
+        const resp2 = await fetch('/api/servicios/eliminar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tipo, id })
+        });
+        const data2 = await resp2.json();
+        Toastify({ text: data2.message || '✅ Servicio eliminado', duration: 2200, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#ff4444,#cc0000)", color: "#fff" } }).showToast();
+        setTimeout(() => location.reload(), 700);
+      } catch (err) {
+        console.error(err);
+        Toastify({ text: "❌ Error al eliminar", duration: 3000, gravity: "bottom", position: "right", style: { background: "linear-gradient(135deg,#ff4444,#cc0000)", color: "#fff" } }).showToast();
+      }
+    }
+  </script>
+</body>
+
+</html>

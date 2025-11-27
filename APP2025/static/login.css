@@ -1,0 +1,213 @@
+:root {
+  --glow-color: #00bcd4;
+}
+
+/* Animación para la variable glow-color */
+@keyframes colorPulse {
+  0%   { --glow-color: #00bcd4; }
+  25%  { --glow-color: #8e24aa; }
+  50%  { --glow-color: #ff4081; }
+  75%  { --glow-color: #00e676; }
+  100% { --glow-color: #00bcd4; }
+}
+
+/* Fondo oscuro con partículas */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #fdfdff; /* Azul oscuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Caja del login */
+.container {
+  position: relative;
+  width: 320px;
+  min-height: 420px;
+  background: rgba(18, 18, 18, 0.85); /* Negro translúcido */
+  border-radius: 16px;
+  padding: 30px 25px;
+  z-index: 1;
+  box-shadow:
+    0 0 10px var(--glow-color),
+    0 0 20px var(--glow-color),
+    0 0 30px var(--glow-color),
+    0 0 40px var(--glow-color);
+  animation: neonPulse 6s infinite ease-in-out, colorPulse 20s infinite alternate;
+}
+
+/* LÍNEAS DE NEÓN DINÁMICAS alrededor del login */
+.container::before,
+.container::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--glow-color), transparent);
+  top: 0;
+  left: 0;
+  animation: moveLineX 4s linear infinite;
+  z-index: 2;
+}
+
+.container::after {
+  top: auto;
+  bottom: 0;
+  animation-delay: 2s;
+}
+
+.container .side-line {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, var(--glow-color), transparent);
+  top: 0;
+  animation: moveLineY 4s linear infinite;
+  z-index: 2;
+}
+
+.container .side-line.left {
+  left: 0;
+}
+
+.container .side-line.right {
+  right: 0;
+  animation-delay: 2s;
+}
+
+/* Formularios posicionados uno encima del otro */
+.form {
+  position: absolute;
+  top: 30px;
+  left: 25px;
+  right: 25px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(50px) scale(0.95);
+  transition: all 0.4s ease;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-radius: 16px;
+  z-index: 3;
+  color: var(--glow-color);
+  animation: colorPulse 20s infinite alternate;
+}
+
+.form.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0) scale(1);
+  animation: floatIn 0.6s ease-in-out, colorPulse 20s infinite alternate;
+}
+
+/* Cabecera del formulario */
+.form h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: var(--glow-color);
+  animation: colorPulse 20s infinite alternate;
+}
+
+/* Inputs */
+.form input {
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 20px;
+  background: #1f1f1f;
+  color: var(--glow-color);
+  font-size: 14px;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form input:focus {
+  outline: none;
+  box-shadow: 0 0 10px var(--glow-color);
+  border-color: var(--glow-color);
+}
+
+/* Botón */
+.form button {
+  padding: 12px;
+  background: var(--glow-color);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--glow-color);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.form button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px var(--glow-color);
+}
+
+/* Texto debajo del formulario */
+.form p {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.form a {
+  color: var(--glow-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.form a:hover {
+  text-decoration: underline;
+}
+
+/* Animaciones */
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 10px var(--glow-color),
+      0 0 20px var(--glow-color),
+      0 0 30px var(--glow-color),
+      0 0 40px var(--glow-color);
+  }
+  50% {
+    box-shadow:
+      0 0 20px var(--glow-color),
+      0 0 40px var(--glow-color),
+      0 0 60px var(--glow-color),
+      0 0 80px var(--glow-color);
+  }
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes moveLineX {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes moveLineY {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>💬 Muro de Fiestas Neon</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'Muli', sans-serif;
+      overflow-x: hidden;
+    }
+    h2 {
+      color: #ff00cc;
+      text-shadow: 0 0 10px #ff00cc, 0 0 20px #ff33ff, 0 0 30px #cc00ff;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .navbar {
+      background: rgba(18, 18, 18, 0.85);
+      box-shadow: 0 0 25px #cc079a;
+    }
+    .navbar .nav-link, .navbar .navbar-brand {
+      color: #fff !important;
+      font-weight: 500;
+    }
+    .navbar .nav-link:hover {
+      color: #ff00cc !important;
+      text-shadow: 0 0 15px #ff00cc;
+    }
+    .post-box {
+      background: #1c1c1c;
+      border: 2px solid #ff00cc;
+      box-shadow: 0 0 25px #ff00cc;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+    }
+    .publicacion {
+      background: rgba(30, 30, 30, 0.9);
+      border-left: 4px solid #ff00cc;
+      padding: 20px;
+      margin-bottom: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #ff00cc;
+      transition: all 0.4s ease;
+    }
+    .publicacion:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 25px #ff33ff;
+    }
+    .publicacion.eliminando {
+      opacity: 0;
+      transform: scale(0.9);
+      margin: 0 !important;
+      padding: 0 !important;
+      height: 0 !important;
+      overflow: hidden;
+      border: none !important;
+    }
+    .foto-perfil {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 10px #ff00cc;
+    }
+    .comentario {
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 3px solid #ff33ff;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    .btn-neon {
+      background-color: #ff00cc;
+      border: none;
+      color: white;
+      box-shadow: 0 0 15px #ff00cc;
+      transition: 0.3s;
+    }
+    .btn-neon:hover {
+      background-color: #ff33ff;
+      box-shadow: 0 0 25px #ff33ff;
+    }
+    .acciones {
+      text-align: right;
+    }
+    .modal-content {
+      background: #1a1a1a;
+      color: white;
+      border: 2px solid #ff00cc;
+      box-shadow: 0 0 30px #ff00cc;
+    }
+    footer {
+      background: #111;
+      text-align: center;
+      padding: 15px;
+      color: #aaa;
+      text-shadow: 0 0 10px #ff00cc;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark py-3">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">🎉 Fiestas Neon</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('inicio') }}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('servicios') }}">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('perfil') }}">Perfil</a></li>
+          
+
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Salir</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h2>💬 Muro de Fiestas</h2>
+
+    <!-- Publicar -->
+    <form action="{{ url_for('chat') }}" method="POST" enctype="multipart/form-data" class="post-box" onsubmit="publicarMensaje(event, this)">
+      <div class="d-flex align-items-center mb-3">
+        <img src="{{ url_for('static', filename=usuario + '.jpg') if usuario else '/static/img/default_profile.png' }}" class="foto-perfil me-3">
+        <textarea name="contenido" class="form-control me-2" placeholder="Comparte tu próxima fiesta..." required></textarea>
+      </div>
+      <div class="d-flex justify-content-between">
+        <input type="file" name="imagen" class="form-control form-control-sm w-50" accept="image/*">
+        <button class="btn btn-neon" type="submit">Publicar </button>
+      </div>
+    </form>
+
+    <!-- Publicaciones -->
+    {% for pub in publicaciones %}
+    <div class="publicacion" id="pub{{ pub.id }}">
+      <div class="d-flex align-items-center mb-2">
+        <img src="{{ pub.foto or '/static/img/default_profile.png' }}" class="foto-perfil me-3">
+        <div>
+          <strong style="color:#ff33ff;">{{ pub.usuario }}</strong><br>
+          <small class="text-muted">{{ pub.fecha_publicacion }}</small>
+        </div>
+      </div>
+
+      <p>{{ pub.contenido }}</p>
+      {% if pub.imagen_url %}
+        <img src="{{ pub.imagen_url }}" class="img-fluid rounded mb-3">
+      {% endif %}
+
+      {% if pub.usuario == usuario %}
+      <div class="acciones">
+        <button class="btn btn-sm btn-warning" data-id="{{ pub.id }}" data-contenido="{{ pub.contenido | e }}" onclick="abrirDesdeBoton(this)">✏️ Editar</button>
+        <button class="btn btn-sm btn-danger" data-id="{{ pub.id }}" data-url="{{ url_for('eliminar_publicacion', id=pub.id) }}" onclick="eliminarDesdeBoton(this)">🗑️ Eliminar</button>
+      </div>
+      {% endif %}
+
+      <!-- Comentarios -->
+      <div class="mt-3">
+        {% for c in pub.comentarios %}
+        <div class="comentario">
+          <strong style="color:#ff33ff;">{{ c.usuario }}</strong>
+          <small>{{ c.fecha_comentario }}</small>
+          <p class="mt-1">{{ c.comentario }}</p>
+        </div>
+        {% endfor %}
+
+        <form action="{{ url_for('comentar', pub_id=pub.id) }}" method="POST" class="mt-3 d-flex" onsubmit="comentarioBonito(event, this)">
+          <input type="text" name="comentario" class="form-control me-2" placeholder="Escribe un comentario..." required>
+          <button class="btn btn-neon">💬</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Modal global -->
+  <div class="modal fade" id="modalEditarGlobal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="formEditarGlobal" method="POST" enctype="multipart/form-data" onsubmit="editarMensaje(event, this)">
+          <div class="modal-header">
+            <h5 class="modal-title">✏️ Editar publicación</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <textarea id="contenidoEditar" name="contenido" class="form-control mb-3" rows="3" required></textarea>
+            <label>Nueva imagen (opcional)</label>
+            <input type="file" name="imagen" class="form-control" accept="image/*">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-neon">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer><p>&copy; 2025 Fiestas Neon | Creado con 💜 por tu equipo</p></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Mensaje al publicar
+    function publicarMensaje(e, form) {
+      e.preventDefault();
+      Swal.fire({
+        icon: 'success',
+        title: '🎉 ¡Publicación creada!',
+        text: 'Tu fiesta ha sido compartida con todos 💫',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      setTimeout(() => form.submit(), 1800);
+    }
+
+    // Mensaje al comentar
+    function comentarioBonito(e, form) {
+      e.preventDefault();
+      Swal.fire({
+        icon: 'info',
+        title: '💬 Comentario enviado',
+        text: 'Tu mensaje se agregó con éxito ✨',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      setTimeout(() => form.submit(), 1800);
+    }
+
+    // Editar mensaje bonito
+    function editarMensaje(e, form) {
+      e.preventDefault();
+      Swal.fire({
+        icon: 'success',
+        title: '✨ Cambios guardados',
+        text: 'Tu publicación fue actualizada correctamente 💜',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      setTimeout(() => form.submit(), 1800);
+    }
+
+    // Abrir modal de edición
+    function abrirDesdeBoton(btn) {
+      const id = btn.dataset.id;
+      const contenido = btn.dataset.contenido;
+      const modal = new bootstrap.Modal(document.getElementById('modalEditarGlobal'));
+      document.getElementById('contenidoEditar').value = contenido;
+      document.getElementById('formEditarGlobal').action = `/actualizar_publicacion/${id}`;
+      modal.show();
+    }
+
+    // Eliminar con confirmación bonita
+    async function eliminarDesdeBoton(btn) {
+      const id = btn.dataset.id;
+      const url = btn.dataset.url;
+      const confirmacion = await Swal.fire({
+        title: '¿Eliminar publicación?',
+        text: 'Esta acción no se puede deshacer 💔',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ff00cc',
+        cancelButtonColor: '#aaa',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (confirmacion.isConfirmed) {
+        const pub = document.getElementById("pub" + id);
+        pub.classList.add("eliminando");
+        try {
+          const resp = await fetch(url, { method: "POST" });
+          if (resp.ok) {
+            Swal.fire({
+              icon: 'success',
+              title: '🗑️ Eliminada',
+              text: 'Tu publicación fue eliminada con éxito',
+              timer: 2000,
+              showConfirmButton: false
+            });
+            setTimeout(() => pub.remove(), 1000);
+          } else {
+            Swal.fire('Error', 'No se pudo eliminar la publicación.', 'error');
+          }
+        } catch {
+          Swal.fire('Error', 'Error de conexión.', 'error');
+        }
+      }
+    }
+  </script>
+</body>
+</html>
